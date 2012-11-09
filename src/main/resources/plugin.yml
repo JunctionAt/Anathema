@@ -1,0 +1,12 @@
+name: Anathema
+main: at.junction.anathema.Anathema
+version: 1.0
+commands:
+  jregister:
+    descritption: Register your account with Junction.at
+    aliases: jr
+    permission: junction.register.use
+    usage: |
+      Register your account with Junction.at
+      You will be asked to enter and verify a password.
+      To start: /jr

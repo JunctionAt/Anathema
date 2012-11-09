@@ -1,0 +1,33 @@
+server: server
+api:
+  base: https://junction.at
+  username: wiggitywhack
+  password: password
+message:
+
+  error: Internal error. Please notify staff.
+  notmember: You are not a member.
+  
+  register:
+    required: |
+      This command requires registration.
+      Use: /jr
+    password: |
+      You have been muted in chat for 60 seconds.
+      Please provide a website login password of at least 8 characters.
+      Use: /jr <password>
+    verify: |
+      Please verify your password.
+      Use: /jr <password>
+    success: Your account has been registered. You have been unmuted.
+    alreadyregistered: You have already registered.
+    needpassword: |
+      Please provide a password of at least 8 characters.
+      Use: /jr <password>
+    unmuted: Registration timeout reached. You have been unmuted.
+    muted: |
+      You are muted while you complete registration.
+      Use: /jr <password>
+    passwordmismatch: |
+      Passwords did not match. You have been unmuted.
+      To start registration again, use: /jr
