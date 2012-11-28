@@ -1,11 +1,8 @@
 package at.junction.anathema;
 
 import java.util.HashMap;
-import org.bukkit.plugin.*;
 import org.bukkit.command.*;
 import org.bukkit.event.*;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import at.junction.api.*;
 import org.json.*;
@@ -56,8 +53,9 @@ public class Anathema extends JavaPlugin implements Listener
 
     enum Command
     {    
-        addban(null),
-        addnote(null);
+        ban(new BanCommandExecutor()),
+        note(new NoteCommandExecutor()),
+        lookup(new LookupCommandExecutor());
 
         final CommandExecutor executor;
 
@@ -68,7 +66,6 @@ public class Anathema extends JavaPlugin implements Listener
     
     @Override
     public boolean onCommand(final CommandSender sender, final org.bukkit.command.Command command, final String label, final String[] args) {
-    	String sendername = sender instanceof Player ? "[Console]" : sender.getName();
         CommandExecutor executor;
         try {
             executor = Command.valueOf(command.getName().toLowerCase()).executor;
@@ -77,7 +74,7 @@ public class Anathema extends JavaPlugin implements Listener
         }
         return executor.onCommand(sender, command, label, args);
     }
-
+    
     void sendMessage(final CommandSender sender, final String message) {
         runTask(new Runnable() {
                 public void run() {

@@ -1,4 +1,4 @@
-package at.junction.plugin;
+package at.junction.anathema;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,7 +25,7 @@ public class AnathemaTest
      */
     public static Test suite()
     {
-        return new TestSuite(JunctionPluginTest.class);
+        return new TestSuite(AnathemaTest.class);
     }
 
     public void testTrue()
