@@ -1,18 +1,19 @@
 package at.junction.anathema;
 
+import java.io.IOException;
 import java.util.HashMap;
 import org.bukkit.command.*;
 import org.bukkit.event.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import at.junction.api.*;
+
 import org.json.*;
 
 public class Anathema extends JavaPlugin implements Listener
 {
-
     String server;
     JunctionAPI api;
-    final HashMap<String,String> name = new HashMap<String,String>();
+    LookupContextStore contextStore;
     final HashMap<String,String> message = new HashMap<String,String>();
 
     @Override
@@ -29,14 +30,11 @@ public class Anathema extends JavaPlugin implements Listener
                 getConfig().getString("api.base"),
                 getConfig().getString("api.username"),
                 getConfig().getString("api.password"));
-            final JSONObject names = new JSONObject(api.groupNames(server)).getJSONObject("names");
-            for (final String key : JSONObject.getNames(names)) {
-                name.put(key, names.getString(key));
-            }
         } catch (final Exception e) {
             getPluginLoader().disablePlugin(this);
             throw new RuntimeException(e);
         }
+        contextStore = new LookupContextStore();
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Anathema was enabled.");
     }
@@ -45,7 +43,6 @@ public class Anathema extends JavaPlugin implements Listener
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
         HandlerList.unregisterAll((JavaPlugin)this);
-        name.clear();
         message.clear();
         api = null;
         getLogger().info("Anathema was disabled.");
@@ -53,9 +50,7 @@ public class Anathema extends JavaPlugin implements Listener
 
     enum Command
     {    
-        ban(new BanCommandExecutor()),
-        note(new NoteCommandExecutor()),
-        lookup(new LookupCommandExecutor());
+        a(new AnathemaCommandExecutor());
 
         final CommandExecutor executor;
 
@@ -78,7 +73,10 @@ public class Anathema extends JavaPlugin implements Listener
     void sendMessage(final CommandSender sender, final String message) {
         runTask(new Runnable() {
                 public void run() {
-                    sender.sendMessage(message);
+                	String[] s = message.split("\n");
+                	for (String m : s){
+                		sender.sendMessage(m);
+                	}
                 }
             });
     }
@@ -108,4 +106,15 @@ public class Anathema extends JavaPlugin implements Listener
         getServer().getScheduler().cancelTask(task);
     }
 
+    public JunctionClient getNewClient() throws HttpException, IOException {
+    	return new JunctionClient(
+                getConfig().getString("api.base"),
+                getConfig().getString("api.username"),
+                getConfig().getString("api.password"));
+    }
+    
+    public void logException(Exception e) {
+    	
+    }
+    
 }
