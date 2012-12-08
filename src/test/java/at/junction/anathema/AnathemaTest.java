@@ -1,5 +1,13 @@
 package at.junction.anathema;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+
+import at.junction.anathema.BanApi;
+import at.junction.anathema.BanApi.APIException;
+import at.junction.api.HttpException;
+import at.junction.api.JunctionClient;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -10,6 +18,9 @@ import junit.framework.TestSuite;
 public class AnathemaTest 
     extends TestCase
 {
+	
+	private final String base = "https://wiggitywhack-dev.junction.at";
+	
     /**
      * Create the test case
      *
@@ -31,5 +42,12 @@ public class AnathemaTest
     public void testTrue()
     {
         assertTrue( true );
+    }
+    
+    public void testLookup() throws HttpException, IOException, JSONException, APIException
+    {
+    	final JunctionClient client = new JunctionClient(base, "wiggitywhack", "password");
+    	LookupResponse result = BanApi.doFullLookup(client, "testuser");
+    	assertNotNull(result);
     }
 }
