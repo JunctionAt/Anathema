@@ -7,6 +7,6 @@ commands:
     permission: junction.anathema.use
     usage: Look in docs.
   b:
-  	description: Anathema browse command
-	permission: junction.anathema.use
-	usage: Look in docs.
+    description: Anathema browse command
+    permission: junction.anathema.use
+    usage: Look in docs.
