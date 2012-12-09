@@ -39,11 +39,6 @@ public class AnathemaTest
     {
         return new TestSuite(AnathemaTest.class);
     }
-
-    public void testTrue()
-    {
-        assertTrue( true );
-    }
     
     public void testLookupAndConstructContext() throws HttpException, IOException, JSONException, APIException
     {

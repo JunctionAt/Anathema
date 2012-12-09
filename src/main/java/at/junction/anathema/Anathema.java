@@ -14,9 +14,14 @@ public class Anathema extends JavaPlugin implements Listener
     LookupContextStore contextStore;
     final HashMap<String,String> message = new HashMap<String,String>();
 
+    String base;
+    String username;
+    String password;
+    
     @Override
     public void onEnable() {
-        getConfig().options().copyDefaults(true);
+    	getConfig().options().copyDefaults(true);
+    	this.saveDefaultConfig();
         server = getConfig().getString("server");
         for (final String key : getConfig().getKeys(true)) {
             if (key.regionMatches(0, "message.", 0, 8)) {
@@ -32,6 +37,11 @@ public class Anathema extends JavaPlugin implements Listener
             getPluginLoader().disablePlugin(this);
             throw new RuntimeException(e);
         }
+        
+        base = getConfig().getString("api.base");
+        username = getConfig().getString("api.username");
+        password = getConfig().getString("api.password");
+        
         contextStore = new LookupContextStore();
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("Anathema was enabled.");
@@ -48,7 +58,8 @@ public class Anathema extends JavaPlugin implements Listener
 
     enum Command
     {    
-        a(new AnathemaCommandExecutor());
+        a(new ActionCommandExecutor()),
+        c(new ContextCommandExecutor());
 
         final CommandExecutor executor;
 
