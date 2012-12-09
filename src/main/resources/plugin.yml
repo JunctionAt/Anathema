@@ -2,29 +2,11 @@ name: Anathema
 main: at.junction.anathema.Anathema
 version: 1.0
 commands:
-  ban:
-    description: Used to manage bans.
-    permission: junction.anathema.ban
-    usage: |
-      Used to manage bans.
-      /ban add user reason
-      /ban del user reason
-  note:
-    description: Used to manage notes.
-    permission: junction.anathema.note
-    usage: |
-      Used to manage notes.
-      /note add user note
-      /note del user note
-  lookup:
-    description: Used to lookup notes and bans.
-    permission: junction.anathema.lookup
-    alias: l
-    usage: |
-      (/lookup or /l) Used to lookup notes and bans.
-      This function takes one word as a parameter, and the player name.
-      The parameter word is composed of individual letters with different functions.
-      Order of the letters is not important.
-      Scope: (Default: local) g-global, l-local
-      Type: (Default: both) b-bans, n-notes
-      Example: /lookup gbn username - Looks up global notes and bans for the username.
+  a:
+    description: Anathema action command
+    permission: junction.anathema.use
+    usage: Look in docs.
+  b:
+  	description: Anathema browse command
+	permission: junction.anathema.use
+	usage: Look in docs.
