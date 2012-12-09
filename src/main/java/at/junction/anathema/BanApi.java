@@ -12,6 +12,9 @@ import at.junction.anathema.LookupResponse;
 
 public class BanApi {
 	
+	//Fuck you compiler
+	BanApi() {}
+	
 	private static LookupResponse parseJSONResponse(JSONObject json, String username) throws JSONException, APIException {
 		if(!json.getBoolean("success")) {
 			if(json.has("error"))
@@ -31,7 +34,7 @@ public class BanApi {
 				notelist = new ArrayList<Note>();
 				for(int i=0; i<jsonnotes.length(); i++) {
 					JSONObject current = jsonnotes.getJSONObject(i);
-					notelist.add(new Note(current.getString("note"), current.getString("issuer"), current.has("system") ? current.getString("system") : null, current.getString("server"), current.getInt("id")));
+					notelist.add(new Note(current.getString("note"), current.getString("issuer"), current.has("system") ? current.getString("system") : null, current.getString("server"), current.has("id") ? current.getInt("id") : 0));
 				}
 			}
 		}
@@ -53,8 +56,8 @@ public class BanApi {
 		return new LookupResponse(banlist, notelist, username);
 	}
 	
-	public static void addBan(Anathema plugin, JunctionAPI api, String target, String reason) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.addBan(target, reason, plugin.server));
+	public static void addBan(String server, JunctionAPI api, String target, String reason) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.addBan(target, reason, server));
 		if(json.getBoolean("success")) {
 			return;
 		}
@@ -75,8 +78,8 @@ public class BanApi {
 		throw new APIException();
 	}
 	
-	public static void addNote(Anathema plugin, JunctionAPI api, String target, String note) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.addNote(target, note, plugin.server));
+	public static void addNote(String server, JunctionAPI api, String target, String note) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.addNote(target, note, server));
 		if(json.getBoolean("success")) {
 			return;
 		}

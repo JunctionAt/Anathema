@@ -1,6 +1,7 @@
 package at.junction.anathema;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.json.JSONException;
 
@@ -19,7 +20,7 @@ public class AnathemaTest
     extends TestCase
 {
 	
-	private final String base = "https://wiggitywhack-dev.junction.at";
+	private final String base = "https://hansihe-dev.junction.at";
 	
     /**
      * Create the test case
@@ -44,10 +45,26 @@ public class AnathemaTest
         assertTrue( true );
     }
     
-    public void testLookup() throws HttpException, IOException, JSONException, APIException
+    public void testLookupAndConstructContext() throws HttpException, IOException, JSONException, APIException
     {
     	final JunctionClient client = new JunctionClient(base, "wiggitywhack", "password");
-    	LookupResponse result = BanApi.doFullLookup(client, "testuser");
+    	LookupResponse result = BanApi.doFullLookup(client, "notch");
     	assertNotNull(result);
+    	LookupContext context = new LookupContext();
+    	context.setDataSource(result);
+    	String overview = context.generateOverview();
+    	assertFalse(overview, overview==null || overview.isEmpty());
+    }
+    
+    public void testBanAddLookupRemove() throws HttpException, IOException, JSONException, APIException, URISyntaxException {
+    	final JunctionClient client = new JunctionClient(base, "wiggitywhack", "password");
+    	client.asUser("JUnitTest1");
+    	BanApi.delBan(client, "JUnitTest2");
+    	BanApi.addBan("JUnit_Test", client, "JUnitTest2", "Test reason");
+    	LookupResponse result1 = BanApi.getLocalBans(client, "JUnitTest2");
+    	assertFalse("No bans found in lookup!", result1.getBans()==null || result1.getBans().size()==0);
+    	BanApi.delBan(client, "JUnitTest2");
+    	LookupResponse result2 = BanApi.getLocalBans(client, "JUnitTest2");
+    	assertFalse("Found ban after delBan!", result2.getBans()!=null);
     }
 }

@@ -7,8 +7,6 @@ import org.bukkit.event.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import at.junction.api.*;
 
-import org.json.*;
-
 public class Anathema extends JavaPlugin implements Listener
 {
     String server;

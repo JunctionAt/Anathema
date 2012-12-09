@@ -67,7 +67,7 @@ public class AnathemaCommandExecutor implements CommandExecutor {
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
 					throw INVALID_USERNAME;
-				BanApi.addBan(plugin, api, cargs[0], implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " "));
+				BanApi.addBan(plugin.server, api, cargs[0], implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " "));
 			}
 		} else if (verb.endsWith("note") || verb.endsWith("n")) {
 			JunctionAPI api = plugin.getNewClient();
@@ -87,7 +87,7 @@ public class AnathemaCommandExecutor implements CommandExecutor {
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
 					throw INVALID_USERNAME;
-				BanApi.addNote(plugin, api, cargs[0], implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " "));
+				BanApi.addNote(plugin.server, api, cargs[0], implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " "));
 			}
 		} else if (verb.equals("lookup") || verb.equals("l")) {
 			if (cargs.length<1)

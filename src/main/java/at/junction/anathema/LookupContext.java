@@ -19,19 +19,19 @@ public class LookupContext {
 	
 	public void setDataSource(ILookupDatasource data) {
 		bans = data.getBans();
-		banCount = bans.size();
+		banCount = bans==null ? 0 : bans.size();
 		notes = data.getNotes();
-		noteCount = notes.size();
+		noteCount = notes==null ? 0 : notes.size();
 		username = data.getUsername();
 	}
 	
 	public String generateOverview() {
 		String response = "-------- LOOKUP START --------";
 		if(banCount!=0 || noteCount!=0) {
-			response = response + "\n" + bans.size() + " bans and " + notes.size() + "found on " + username + ":";
-			response = response + "\nBans";
+			response = response + "\n" + banCount + " bans and " + noteCount + " notes found on " + username + ":";
+			response = response + "\nBans:";
 			response = response + genBanList(3);
-			response = response + "\nNotes";
+			response = response + "\nNotes:";
 			response = response + genNoteList(3);
 		} else {
 			response = "\nNothing found on the user " + username;
@@ -42,8 +42,8 @@ public class LookupContext {
 	private String genBanList(int max) {
 		String response = "";
 		if(banCount!=0) {
-			int displaycount = banCount>3 ? 3 : banCount;
-			for(int i = 0; i>=displaycount; i++) {
+			int displaycount = banCount>max ? max : banCount;
+			for(int i = 0; i<displaycount; i++) {
 				Ban currban = bans.get(i);
 				response = 	response + 
 							"\n" + "\"" + 
@@ -64,8 +64,8 @@ public class LookupContext {
 	private String genNoteList(int max) {
 		String response = "";
 		if(noteCount!=0) {
-			int displaycount = noteCount>3 ? 3 : noteCount;
-			for(int i = 0; i>=displaycount; i++) {
+			int displaycount = noteCount>max ? max : noteCount;
+			for(int i = 0; i<displaycount; i++) {
 				Note currnote = notes.get(i);
 				response = 	response + 
 							"\n" + "\"" + 
