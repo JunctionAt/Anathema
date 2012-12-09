@@ -49,7 +49,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 			} catch (HttpException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				plugin.sendMessage(sender, e.getMessage());
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (JSONException e) {
