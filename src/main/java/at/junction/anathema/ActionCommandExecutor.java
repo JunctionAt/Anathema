@@ -116,6 +116,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 				throw INCORRECT_USAGE;
 			boolean hasflags = cargs[0].startsWith("-");
 			String flags = hasflags ? args[0].substring(1) : "";
+			if (hasflags) return flags;
 			if (hasflags&&cargs.length<2)
 				throw INCORRECT_USAGE;
 			String username = cargs[hasflags ? 1 : 0];
