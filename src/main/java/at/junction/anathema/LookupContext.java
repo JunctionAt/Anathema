@@ -17,18 +17,25 @@ public class LookupContext {
 	private int noteCount;
 	private String username;
 	
+	private ActionCommandExecutor.Scope scope = null;
+	
 	public void setDataSource(ILookupDatasource data) {
 		bans = data.getBans();
 		banCount = bans==null ? 0 : bans.size();
 		notes = data.getNotes();
 		noteCount = notes==null ? 0 : notes.size();
 		username = data.getUsername();
+		scope = null;
+	}
+	
+	public void setScope(ActionCommandExecutor.Scope scope) {
+		this.scope = scope;
 	}
 	
 	public String generateOverview() {
 		String response = "-------- LOOKUP START --------";
 		if(banCount!=0 || noteCount!=0) {
-			response = response + "\n" + banCount + " bans and " + noteCount + " notes found on " + username + ":";
+			response = response + "\n" + banCount + " bans and " + noteCount + " notes found" + (scope!=null ? " " + scope.toString() : "") + " on " + username + ":";
 			response = response + "\nBans:";
 			response = response + genBanList(3);
 			response = response + "\nNotes:";

@@ -3,7 +3,6 @@ package at.junction.anathema;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.lang.Character;
 
 import org.bukkit.command.*;
 import org.json.JSONException;
@@ -143,6 +142,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 			} else if (scope == Scope.FULL) {
 				plugin.contextStore.getUserContext(sender).setDataSource(BanApi.doFullLookup(plugin.api, username));
 			}
+			plugin.contextStore.getUserContext(username).setScope(scope);
 			return plugin.contextStore.getUserContext(sender).generateOverview();
 		}
 		return "Success.";
