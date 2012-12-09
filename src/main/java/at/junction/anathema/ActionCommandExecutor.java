@@ -123,12 +123,13 @@ public class ActionCommandExecutor implements CommandExecutor {
 			Scope scope = Scope.LOCAL;
 			if (hasflags) {
 				cargs = Arrays.copyOfRange(cargs, 1, cargs.length);
-				for (char ch: flags.toCharArray()) {
-					if (ch==new Character('l')) {
+				for (char ch : flags.toCharArray()) {
+					
+					if (ch=='l') {
 						scope = Scope.LOCAL;
-					} else if (ch==new Character('g')) {
+					} else if (ch=='g') {
 						scope = Scope.GLOBAL;
-					} else if (ch==new Character('f')) {
+					} else if (ch=='f') {
 						scope = Scope.FULL;
 					} else {
 						throw INVALID_FLAG;
