@@ -66,8 +66,6 @@ public class ActionCommandExecutor implements CommandExecutor {
 			throw INCORRECT_USAGE;
 		String verb = args[0];
 		
-		if (true) return args.toString();
-		
 		boolean inverted = (verb.startsWith("un") || verb.startsWith("del") || verb.startsWith("r")) ? true : false;
 		
 		String[] cargs = new String[]{};
@@ -117,7 +115,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 			if (cargs.length<1)
 				throw INCORRECT_USAGE;
 			boolean hasflags = cargs[0].startsWith("-");
-			String flags = hasflags ? args[0].substring(1) : "";
+			String flags = hasflags ? cargs[0].substring(1) : "";
 			if (hasflags&&cargs.length<2)
 				throw INCORRECT_USAGE;
 			String username = cargs[hasflags ? 1 : 0];
