@@ -34,7 +34,7 @@ public class LookupContext {
 			response = response + "\nNotes:";
 			response = response + genNoteList(3);
 		} else {
-			response = "\nNothing found on the user " + username;
+			response = response + "\nNothing found on the user " + username;
 		}
 		return response + "\n--------- LOOKUP END ---------";
 	}
@@ -84,7 +84,10 @@ public class LookupContext {
 	}
 	
 	private String shortenText(String text, int maxlen, String appendor) {
-		return text.length() > maxlen ? text.substring(0, maxlen-appendor.length()) + appendor : text;
+		if(text != null) {
+			return text.length() > maxlen ? text.substring(0, maxlen-appendor.length()) + appendor : text;
+		}
+		return "";
 	}
 	
 }
