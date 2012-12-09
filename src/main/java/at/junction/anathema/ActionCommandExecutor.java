@@ -86,6 +86,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 					throw INVALID_USERNAME;
 				BanApi.delBan(api, cargs[0]);
 			} else {
+				System.out.println(cargs);
 				if(cargs.length<2)
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
