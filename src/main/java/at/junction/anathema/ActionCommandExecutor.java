@@ -63,7 +63,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 	
 	public String runParse(Anathema plugin, String sender, String[] args) throws IllegalArgumentException, HttpException, IOException, JSONException, APIException {
 		
-		if(args.length > 0)
+		if(args.length == 0)
 			throw INCORRECT_USAGE;
 		String verb = args[0];
 		
@@ -86,7 +86,6 @@ public class ActionCommandExecutor implements CommandExecutor {
 					throw INVALID_USERNAME;
 				BanApi.delBan(api, cargs[0]);
 			} else {
-				System.out.println(cargs);
 				if(cargs.length<2)
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
