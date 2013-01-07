@@ -55,6 +55,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 				e.printStackTrace();
 			} catch (APIException e) {
 				e.printStackTrace();
+                plugin.sendMessage(sender, e.getMessage());
 			}
 		}
 		
