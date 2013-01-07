@@ -1,7 +1,7 @@
 server: server
 api:
   base: https://junction.at
-  username: wiggitywhack
+  username: Anathema
   password: password
 message:
 

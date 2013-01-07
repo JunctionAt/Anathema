@@ -20,7 +20,7 @@ public class AnathemaTest
     extends TestCase
 {
 	
-	private final String base = "https://hansihe-dev.junction.at";
+	private final String base = "https://junction.at";
 	
     /**
      * Create the test case
@@ -42,8 +42,8 @@ public class AnathemaTest
     
     public void testLookupAndConstructContext() throws HttpException, IOException, JSONException, APIException
     {
-    	final JunctionClient client = new JunctionClient(base, "wiggitywhack", "password");
-    	LookupResponse result = BanApi.doFullLookup(client, "notch");
+    	final JunctionClient client = new JunctionClient(base, "Anathema", "");
+    	LookupResponse result = BanApi.doFullLookup(client, "barneygale");
     	assertNotNull(result);
     	LookupContext context = new LookupContext();
     	context.setDataSource(result);
@@ -52,9 +52,14 @@ public class AnathemaTest
     }
     
     public void testBanAddLookupRemove() throws HttpException, IOException, JSONException, APIException, URISyntaxException {
-    	final JunctionClient client = new JunctionClient(base, "wiggitywhack", "password");
-    	client.asUser("JUnitTest1");
-    	BanApi.delBan(client, "JUnitTest2");
+    	final JunctionClient client = new JunctionClient(base, "Anathema", "");
+    	client.asUser("hansihe");
+    	try {
+    		BanApi.delBan(client, "JUnitTest2");
+    	} 
+    	catch(Exception e) {
+    		
+    	}
     	BanApi.addBan("JUnit_Test", client, "JUnitTest2", "Test reason");
     	LookupResponse result1 = BanApi.getLocalBans(client, "JUnitTest2");
     	assertFalse("No bans found in lookup!", result1.getBans()==null || result1.getBans().size()==0);

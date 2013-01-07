@@ -1,10 +1,16 @@
 package at.junction.anathema;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.command.*;
 import org.bukkit.event.*;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.JSONException;
+
+import at.junction.anathema.BanApi.APIException;
 import at.junction.api.*;
 
 public class Anathema extends JavaPlugin implements Listener
@@ -77,6 +83,44 @@ public class Anathema extends JavaPlugin implements Listener
             return false;
         }
         return executor.onCommand(sender, command, label, args);
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
+    	LookupResponse response = null;
+    	try {
+			response = BanApi.getLocalBans(api, event.getName());
+		} catch (HttpException e) {
+			getLogger().severe(e.getMessage());
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "An error occurred when contacting the api. Please contact tech staff.");
+			return;
+		} catch (JSONException e) {
+			getLogger().severe(e.getMessage());
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "An error occurred when parsing the api response. Please contact tech staff.");
+			return;
+		} catch (IOException e) {
+			getLogger().severe(e.getMessage());
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "An error occurred when reading the response. Please contact tech staff.");
+			return;
+		} catch (APIException e) {
+			getLogger().severe(e.getMessage());
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "An error occurred in the API server. Please contact tech staff.");
+			return;
+		}
+    	
+    	if(response==null) {
+			getLogger().severe("Error occurred in the local bans lookup function, it returned null. Fix this ASAP!!");
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "The lookup function returned null. Please contact tech staff.");
+			return;
+    	}
+    	
+    	ArrayList<Ban> bans = response.getBans();
+    	if(bans.size()!=0) {
+    		event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, bans.get(0).reason);
+    		return;
+    	}
+    	
+    	event.allow();
     }
     
     void sendMessage(final CommandSender sender, final String message) {
