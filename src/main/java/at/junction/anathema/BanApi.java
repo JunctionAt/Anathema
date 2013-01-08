@@ -56,8 +56,8 @@ public class BanApi {
 		return new LookupResponse(banlist, notelist, username);
 	}
 	
-	public static void addBan(String server, JunctionAPI api, String target, String reason) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.addBan(target, reason, server));
+	public static void addBan(String server, JunctionAPI api, String target, String issuer, String reason) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.addBan(target, issuer, reason, server));
 		if(json.getBoolean("success")) {
 			return;
 		}
@@ -78,8 +78,8 @@ public class BanApi {
 		throw new APIException();
 	}
 	
-	public static void addNote(String server, JunctionAPI api, String target, String note) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.addNote(target, note, server));
+	public static void addNote(String server, JunctionAPI api, String target, String issuer, String note) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.addNote(target, issuer, note, server));
 		if(json.getBoolean("success")) {
 			return;
 		}
