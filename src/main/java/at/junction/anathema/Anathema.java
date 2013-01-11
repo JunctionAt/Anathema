@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.bukkit.command.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONException;
 
@@ -132,6 +132,18 @@ public class Anathema extends JavaPlugin implements Listener
                 	}
                 }
             });
+    }
+
+    void kickIfOnline(final String player, final String reason) {
+        final Anathema plugin = this;
+        runTask(new Runnable() {
+            public void run() {
+                Player playerObj = plugin.getServer().getPlayerExact(player);
+                if(player != null) {
+                    playerObj.kickPlayer(reason);
+                }
+            }
+        });
     }
 
     void sendErrorMessage(final CommandSender sender, final Throwable e) {

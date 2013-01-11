@@ -90,7 +90,9 @@ public class ActionCommandExecutor implements CommandExecutor {
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
 					throw INVALID_USERNAME;
-				BanApi.addBan(plugin.server, api, cargs[0], sender, implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " "));
+                String reason = implodeArray(Arrays.copyOfRange(cargs, 1, cargs.length), " ");
+				BanApi.addBan(plugin.server, api, cargs[0], sender, reason);
+                plugin.kickIfOnline(cargs[0], reason + plugin.getConfig().getString("message.banappend"));
 			}
 		} else if (verb.endsWith("note") || verb.endsWith("n")) {
 			JunctionAPI api = plugin.getNewClient();
