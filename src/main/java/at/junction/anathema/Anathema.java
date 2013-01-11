@@ -116,7 +116,7 @@ public class Anathema extends JavaPlugin implements Listener
     	
     	ArrayList<Ban> bans = response.getBans();
     	if(bans!=null && bans.size()!=0) {
-    		event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, bans.get(0).reason);
+    		event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, bans.get(0).reason + getConfig().get("message.banappend"));
     		return;
     	}
     	
@@ -140,7 +140,7 @@ public class Anathema extends JavaPlugin implements Listener
             public void run() {
                 Player playerObj = plugin.getServer().getPlayerExact(player);
                 if(player != null) {
-                    playerObj.kickPlayer(reason);
+                    playerObj.kickPlayer(reason + getConfig().get("message.banappend"));
                 }
             }
         });
