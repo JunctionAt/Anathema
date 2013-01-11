@@ -4,7 +4,7 @@ api:
   username: Anathema
   password: password
 message:
-  banappend:  Appeal: junction.at/appeal
+  banappend:  Appeal:junction.at/appeal
   error: Internal error. Please notify staff.
   notmember: You are not a member.
   
