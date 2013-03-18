@@ -53,17 +53,16 @@ public class AnathemaTest
     
     public void testBanAddLookupRemove() throws HttpException, IOException, JSONException, APIException, URISyntaxException {
     	final JunctionClient client = new JunctionClient(base, "Anathema", "");
-    	client.asUser("hansihe");
     	try {
-    		BanApi.delBan(client, "JUnitTest2");
+    		BanApi.delBan(client, "JUnitTest2", "JUnitTest1");
     	} 
     	catch(Exception e) {
     		
     	}
-    	BanApi.addBan("JUnit_Test", client, "JUnitTest2", "Test reason");
+    	BanApi.addBan("JUnit_Test", client, "JUnitTest2", "JUnitTest1", "Test reason");
     	LookupResponse result1 = BanApi.getLocalBans(client, "JUnitTest2");
     	assertFalse("No bans found in lookup!", result1.getBans()==null || result1.getBans().size()==0);
-    	BanApi.delBan(client, "JUnitTest2");
+    	BanApi.delBan(client, "JUnitTest2", "JUnitTest1");
     	LookupResponse result2 = BanApi.getLocalBans(client, "JUnitTest2");
     	assertFalse("Found ban after delBan!", result2.getBans()!=null);
     }

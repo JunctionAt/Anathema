@@ -84,7 +84,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 					throw INCORRECT_USAGE;
 				if(!isUsernameValid(cargs[0]))
 					throw INVALID_USERNAME;
-				BanApi.delBan(api, cargs[0]);
+				BanApi.delBan(api, cargs[0], sender);
 			} else {
 				if(cargs.length<2)
 					throw INCORRECT_USAGE;
@@ -103,7 +103,7 @@ public class ActionCommandExecutor implements CommandExecutor {
 				if(!isUsernameValid(cargs[0]))
 					throw INVALID_USERNAME;
 				try {
-					BanApi.delNote(api, Integer.parseInt(cargs[0]));
+					BanApi.delNote(api, Integer.parseInt(cargs[0]), sender);
 				} catch (NumberFormatException e) {
 					throw INCORRECT_USAGE;
 				}

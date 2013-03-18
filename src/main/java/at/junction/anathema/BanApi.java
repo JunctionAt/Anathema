@@ -67,8 +67,8 @@ public class BanApi {
 		throw new APIException();
 	}
 	
-	public static void delBan(JunctionAPI api, String target) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.delBan(target));
+	public static void delBan(JunctionAPI api, String target, String remover) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.delBan(target, remover));
 		if(json.getBoolean("success")) {
 			return;
 		}
@@ -89,8 +89,8 @@ public class BanApi {
 		throw new APIException();
 	}
 	
-	public static void delNote(JunctionAPI api, int id) throws HttpException, IOException, JSONException, APIException {
-		JSONObject json = new JSONObject(api.delNote(id));
+	public static void delNote(JunctionAPI api, int id, String remover) throws HttpException, IOException, JSONException, APIException {
+		JSONObject json = new JSONObject(api.delNote(id, remover));
 		if(json.getBoolean("success")) {
 			return;
 		}
