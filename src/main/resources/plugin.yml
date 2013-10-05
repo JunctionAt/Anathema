@@ -1,12 +1,13 @@
 name: Anathema
+version: 2.0
+description: Anathema Ban System
+author: junction.at
+website: http://git.junction.at/anathema
+
 main: at.junction.anathema.Anathema
-version: 1.0
+
 commands:
-  a:
-    description: Anathema action command
-    permission: junction.anathema.use
-    usage: Look in docs.
-  c:
-    description: Anathema browse command
-    permission: junction.anathema.use
-    usage: Look in docs.
+  a: 
+    description: Access Anathema
+    permission: junction.anathema.access
+    usage: /a [ban|unban|addnote|delnote|info]

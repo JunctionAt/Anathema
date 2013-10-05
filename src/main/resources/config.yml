@@ -1,13 +1,8 @@
 server: server
 api:
   base: https://junction.at
-  username: Anathema
-  password: password
+  ApiKey: 
 message:
   banappend:  Appeal:junction.at/appeal
   error: Internal error. Please notify staff.
-  notmember: You are not a member.
-  
-  lookup:
-    lookupstart: -------- LOOKUP START --------
-    lookupend: --------- LOOKUP END ---------
+  noperms: You do not have permission to access this command.
