@@ -10,4 +10,4 @@ commands:
   a: 
     description: Access Anathema
     permission: junction.anathema.access
-    usage: /a [ban|unban|addnote|delnote|info]
+    usage: /a [ban|rban|addnote|rnote|lookup]
