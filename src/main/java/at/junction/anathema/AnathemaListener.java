@@ -2,11 +2,14 @@ package at.junction.anathema;
 
 import at.junction.api.bans.Ban;
 
+import at.junction.api.bans.Note;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-
+import org.bukkit.event.player.PlayerLoginEvent;
 
 
 import java.util.List;
@@ -38,5 +41,23 @@ public class AnathemaListener implements Listener {
             plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
         }
 
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerLoginEvent(PlayerLoginEvent event){
+        try {
+
+            List<Note> notes = plugin.banAPI.getLocalNotes(event.getPlayer().getName(), "true");
+            if (notes.size() == 0) return;
+            for (Note n : notes){
+                String message = String.format("%s[ANATHEMA-NOTES]%s%s has note %s added by %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), event.getPlayer().getName(), n.note, n.issuer);
+                for (Player player : plugin.getServer().getOnlinePlayers()){
+                    if (player.hasPermission("junction.anathema.access")){
+                        player.sendMessage(message);
+                    }
+                }
+            }
+        } catch (Exception e){
+            plugin.getLogger().severe(e.getMessage());
+        }
     }
 }
