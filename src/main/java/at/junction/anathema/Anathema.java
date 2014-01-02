@@ -141,13 +141,11 @@ public class Anathema extends JavaPlugin{
 
      void lookup(String username, CommandSender sender){
         try {
-            sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + "issuer\t|\treason");
             for (Ban b : banAPI.getLocalBans(username, "true")){
-                sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + b.issuer + "\t|\t" + b.reason);
+                sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + "Issuer: " + b.issuer + " Reason: " + b.reason);
             }
-            sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + "issuer\t|\tdate\t|\tnote");
             for (Note n : banAPI.getLocalNotes(username, "true")){
-                sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + n.issuer + "\t|\t" + n.time + "\t|\t" + n.note);
+                sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + "Issuer: "n.issuer + " Time: " + n.time + " Note: " + n.note);
             }
         } catch (Exception e){
             sender.sendMessage("An error has occurred. Lookup failed.");
