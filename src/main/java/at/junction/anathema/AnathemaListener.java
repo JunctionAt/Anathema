@@ -29,7 +29,7 @@ public class AnathemaListener implements Listener {
             if (bans.size() > 0){ //Player is banned
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason + "\n" + plugin.config.BANAPPEND);
                 try {
-                    plugin.altAPI.add(event.getName(), event.getAddress().getHostAddress(), false);
+                    plugin.altAPI.add(event.getAddress().getHostAddress(), event.getName(), false);
                     System.out.println("Disallowed login event: Updated alt DB");
                 } catch (Exception exception){
                     plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
@@ -49,7 +49,7 @@ public class AnathemaListener implements Listener {
         try {
             //Log successful login
             try {
-                plugin.altAPI.add(event.getPlayer().getName(), event.getAddress().getHostAddress(), true);
+                plugin.altAPI.add(event.getAddress().getHostAddress(), event.getPlayer().getName(), true);
                 System.out.println("Alloewd login event: Updated Alt DB");
             } catch (Exception exception){
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
