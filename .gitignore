@@ -37,3 +37,7 @@ nbproject/private/
 *.swp
 *.out
 
+
+#for intellij idea
+*.iml
+.idea/

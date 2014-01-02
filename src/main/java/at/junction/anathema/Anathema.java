@@ -1,26 +1,26 @@
 package at.junction.anathema;
 
-import at.junction.api.BanAPI;
+import at.junction.api.alts.AltAPI;
+import at.junction.api.bans.BanAPI;
+import at.junction.api.bans.Ban;
 
 import java.io.File;
-import java.util.ArrayList;
-import org.bukkit.Bukkit;
+
+import at.junction.api.bans.Note;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 public class Anathema extends JavaPlugin{
-    AnathemaListener listener;
 
-    private BanAPI banAPI;
-    private String server, endpoint, ApiKey, banAppend;
-    private ChatColor color = ChatColor.RED;
+    BanAPI banAPI;
+    AltAPI altAPI;
+    Configuration config;
+
+
     @Override
     public void onEnable(){
         File conf = new File(getDataFolder(), "config.yml");
@@ -28,17 +28,14 @@ public class Anathema extends JavaPlugin{
 			getConfig().options().copyDefaults(true);
 			saveConfig();
 		}
-        server = getConfig().getString("server");
-        endpoint = getConfig().getString("endpoint");
-        ApiKey = getConfig().getString("ApiKey");
-        banAppend = getConfig().getString("banAppend");
 
-        banAPI = new BanAPI(endpoint, ApiKey);
-        getLogger().info("BanAPI Loaded");
-        listener = new AnathemaListener(this, banAPI, banAppend);
+        config = new Configuration(this);
+        config.load();
 
-  
-        getServer().getPluginManager().registerEvents(listener, this);
+        banAPI = new BanAPI(config.ENDPOINT, config.APIKEY);
+        altAPI = new AltAPI(config.ENDPOINT, config.APIKEY);
+
+        getServer().getPluginManager().registerEvents(new AnathemaListener(this), this);
         getLogger().info("Enabled Anathema");
     }
 
@@ -46,127 +43,116 @@ public class Anathema extends JavaPlugin{
     public void onDisable(){
         getLogger().info("Disabled Anathema");
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String name, String[] args) {
         if(command.getName().equalsIgnoreCase("a")) {
-            if (args.length > 0){
-                if (args[0].equalsIgnoreCase("ban")){
-                    if (args.length < 3){
-                        sender.sendMessage(color + "Usage: /a ban <player> <reason>");
-                        return true;
-                    }
-                    Player banned = Bukkit.getPlayer(args[1]);
-                    String reason = "";
-                    for (int i=2; i<args.length; i++) reason += (args[i] + " ");
-                    try {
-                        getLogger().info(banAPI.addBan(banned.getName(), sender.getName(), reason, server));
-                        banned.kickPlayer("You have been banned.\nReason: " + reason + "\n" + banAppend);
-                    } catch (Exception e){
-                        getLogger().severe(e.getMessage());    
-                    }
-                    return true;
-                } else if (args[0].equalsIgnoreCase("rban")){
-                    if (args.length < 2){
-                        sender.sendMessage(color + "Usage: /a rban <player>");
-                        return true;
-                    }
-                    try {
-                        ArrayList<Ban> bans = getLocalBans(args[1], "true");
-                        if (bans.size() != 0) {
-                            getLogger().info(banAPI.delBan(args[1], sender.getName()));
-                            sender.sendMessage(color + "Ban removed");
-                            return true;
-                         } else {
-                            sender.sendMessage(color + "Player is not banned");
-                            return true;
-                         }
-                    } catch (Exception e){
-                        getLogger().severe("Error while removing ban: " + e.getMessage());
-                        sender.sendMessage(color + "Ban could not be removed - please contact tech staff");
-                        return true;
-                    }
+            if (args.length < 1){
+                sender.sendMessage(ChatColor.RED + "Advanced Anathema Usage: http://junction.at/wiki/anathema");
+                sender.sendMessage(ChatColor.RED + "NYI");
+                return true;
+            }
 
-                } else if (args[0].equalsIgnoreCase("addnote")){
-                    sender.sendMessage(color + "Usage: /a addnote <player> <note>");
-                    sender.sendMessage(color + "NOT YET IMPLEMENTED"); 
-                    return true;
-                } else if (args[0].equalsIgnoreCase("delnote")){
-                    sender.sendMessage(color + "Usage: /a delnote <player> <noteID>");
-                    sender.sendMessage(color + "NOT YET IMPLEMENTED");
-                    return true;
-                }else if (args[0].equalsIgnoreCase("lookup")){
-                    if (args.length < 4){
-                        sender.sendMessage(color + "Usage: /a lookup [bans|notes] [current|removed] <player>");
-                        return true;
-                    }
-                    try {
-                        if (args[2].equalsIgnoreCase("current")){
-                            if (args[1].equalsIgnoreCase("bans")){
-                                sender.sendMessage(color + "id: issuer | time | reason");
-                                for (Ban b : getLocalBans(args[3], "true")){
-                                    sender.sendMessage(color +""+ b.id + ": " + b.issuer + " | " + b.time + " | " + b.reason);
-                                }
-                            } else if (args[1].equalsIgnoreCase("notes")) {
-                                sender.sendMessage(color + "Not Yet Implemented");
-                            } 
-                        } else if (args[2].equalsIgnoreCase("removed")){
-                            if (args[1].equalsIgnoreCase("bans")){
-                                sender.sendMessage(color + "id: issuer | time | reason");
-                                for (Ban b : getLocalBans(args[3], "false")){
-                                    sender.sendMessage(color +""+ b.id + ": " + b.issuer + " | " + b.time + " | " + b.reason);
-                                }
-                            } else if (args[1].equalsIgnoreCase("notes")) {
-                                sender.sendMessage(color + "Not Yet Implemented");
-                            } 
-                        }
-                    } catch (Exception e){
-                        sender.sendMessage(color + "Error occurred: " + e.getMessage());
-                    }
-                    return true;
-                }
 
-                return false;
-            } else {
-                return false;
+        } else if (command.getName().equalsIgnoreCase("ban")){
+            if (args.length < 2){
+                sender.sendMessage(ChatColor.RED + "Usage: /ban <username> <reason>");
+                return true;
+            }
+
+            StringBuilder reason = new StringBuilder();
+            for (int i=1; i<args.length; i++){
+                reason.append(args[i]);
+                if (i != args.length-1)
+                    reason.append(" ");
+            }
+            ban(args[0], sender, reason.toString());
+
+        } else if (command.getName().equalsIgnoreCase("unban")){
+            if (args.length < 1){
+                sender.sendMessage(ChatColor.RED + "Usage: /unban <player>");
+                return true;
+            }
+            unban(args[0], sender);
+
+        } else if (command.getName().equalsIgnoreCase("addnote")){
+            if (args.length < 2){
+                sender.sendMessage(ChatColor.RED + "Usage: /addnote <username> <message>");
+            }
+            StringBuilder note = new StringBuilder();
+            for (int i=0; i<args.length; i++){
+                note.append(args[i]);
+                if (i != args.length - 1)
+                    note.append(" ");
+
             }
         }
-        return false;
+        else if (command.getName().equals("lookup")){
+            if (args.length < 1){
+                sender.sendMessage(ChatColor.RED + "Usage: /lookup <player>");
+                return true;
+            }
+            lookup(args[0], sender);
+        }
+        return true;
     }
-    //Get bans, put into Map<Issuer, Reason>
-    public ArrayList<Ban> getLocalBans(String player, String active) throws Exception, JSONException{
-        String json;
-        ArrayList<Ban> ret= new ArrayList<Ban>();
 
-        try {
-            json = banAPI.getLocalBans(player, active);
-        } catch (Exception e){
-            getLogger().severe("E01: An error occured while using the API" + e.getMessage());
-            throw e;
-        }
-        try {
-            JSONObject info = new JSONObject(json);
-            JSONArray bans = (JSONArray)info.get("bans");
-            for (int i=0; i<bans.length(); i++){
-                Ban tmp = new Ban();
-                JSONObject ban = bans.getJSONObject(i);
-                tmp.username = ban.getString("username");
-                tmp.time = ban.getString("time");
-                tmp.reason = ban.getString("reason");
-                tmp.issuer = ban.getString("issuer");
-                tmp.id = ban.getInt("id");
-                ret.add(tmp);
+    void staffBroadcast(String message){
+        for (Player p : getServer().getOnlinePlayers()){
+            if (p.hasPermission("anathema.access")){
+                p.sendMessage(ChatColor.GREEN + "[ANATHEMA]" + message);
             }
-            return ret ;
-            
-        } catch (JSONException e){
-            getLogger().severe("E02: An error occured while decoding json");
-            throw e;
         }
-        
+    }
 
+    void ban(String username,  CommandSender sender, String reason){
+        try {
+            banAPI.addBan(username, sender.getName(), reason, config.SERVERNAME);
+            staffBroadcast(username + " was banned by " + sender.getName() + ". Reason: " + reason);
 
+        } catch (Exception e){
+            sender.sendMessage("An error has occurred. Player was not banned. Please contact tech staff.");
+            getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
+                    " Message: " + e.getMessage());
+        }
+    }
+    void unban(String username, CommandSender sender){
+        try {
+            banAPI.delBan(username, sender.getName());
+            staffBroadcast(username + " was unbanned by " + sender.getName());
+        } catch (Exception e){
+            sender.sendMessage("An error has occurred. Player was not unbanned. Please contact tech staff.");
+            getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
+                    " Message: " + e.getMessage());
+        }
+    }
 
+    void addnote(String username, CommandSender sender, String note){
+        try {
+            banAPI.addNote(username, sender.getName(), note, config.SERVERNAME);
+        } catch (Exception e){
+            sender.sendMessage("An error has occurred. Note was not added. Please contact tech staff.");
+            getLogger().severe("Error while trying to add note to player. Username: " + username + " Issuer: " + sender.getName() +
+                    " Note: " + e.getMessage());
+
+        }
+
+    }
+
+     void lookup(String username, CommandSender sender){
+        try {
+            sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-BANS]" + ChatColor.RESET + "issuer | reason");
+            for (Ban b : banAPI.getLocalBans(username, "true")){
+                sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-BANS]" + ChatColor.RESET + b.issuer + " | " + b.reason);
+            }
+            sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-NOTES]" + ChatColor.RESET + "issuer | date | note");
+            for (Note n : banAPI.getLocalNotes(username, "true")){
+                sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-NOTES]" + ChatColor.RESET + n.issuer + " | " + n.time + " | " + n.note);
+            }
+        } catch (Exception e){
+            sender.sendMessage("An error has occurred. Lookup failed.");
+            getLogger().severe("Error while doing lookup. Message: " + e.getMessage());
+        }
     }
 
 
