@@ -7,7 +7,19 @@ website: http://git.junction.at/anathema
 main: at.junction.anathema.Anathema
 
 commands:
-  a: 
-    description: Access Anathema
+  ban:
+    description: Ban Player
     permission: junction.anathema.access
-    usage: /a [ban|rban|addnote|rnote|lookup]
+    usage: /ban <username> <reason>
+  unban:
+    description: Unban Player
+    permission: junction.anathema.access
+    usage: /unban <username>
+  addnote:
+    description: Add a note to a player's account
+    permission: junction.anathema.access
+    usage: /addnote <username> <note>
+permissions:
+  junction.anathema.access:
+    description: Allows a player to use anathema
+    default: op
