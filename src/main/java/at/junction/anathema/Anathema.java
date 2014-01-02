@@ -3,10 +3,10 @@ package at.junction.anathema;
 import at.junction.api.alts.AltAPI;
 import at.junction.api.bans.BanAPI;
 import at.junction.api.bans.Ban;
+import at.junction.api.bans.Note;
 
 import java.io.File;
 
-import at.junction.api.bans.Note;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
