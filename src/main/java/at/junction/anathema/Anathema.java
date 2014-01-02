@@ -80,7 +80,7 @@ public class Anathema extends JavaPlugin{
                 sender.sendMessage(ChatColor.RED + "Usage: /addnote <username> <message>");
             }
             StringBuilder note = new StringBuilder();
-            for (int i=0; i<args.length; i++){
+            for (int i=1; i<args.length; i++){
                 note.append(args[i]);
                 if (i != args.length - 1)
                     note.append(" ");
@@ -130,6 +130,7 @@ public class Anathema extends JavaPlugin{
     void addnote(String username, CommandSender sender, String note){
         try {
             banAPI.addNote(username, sender.getName(), note, config.SERVERNAME);
+            staffBroadcast(String.format("Note added to %s by %s: %s", sender.getName(), username, note));
         } catch (Exception e){
             sender.sendMessage("An error has occurred. Note was not added. Please contact tech staff.");
             getLogger().severe("Error while trying to add note to player. Username: " + username + " Issuer: " + sender.getName() +
