@@ -145,7 +145,7 @@ public class Anathema extends JavaPlugin{
                 sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + "Issuer: " + b.issuer + " Reason: " + b.reason);
             }
             for (Note n : banAPI.getLocalNotes(username, "true")){
-                sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + "Issuer: "n.issuer + " Time: " + n.time + " Note: " + n.note);
+                sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + "Issuer: " + n.issuer + " Time: " + n.time + " Note: " + n.note);
             }
         } catch (Exception e){
             sender.sendMessage("An error has occurred. Lookup failed.");

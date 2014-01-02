@@ -28,6 +28,11 @@ public class AnathemaListener implements Listener {
             List<Ban> bans = plugin.banAPI.getLocalBans(event.getName(), "true");
             if (bans.size() > 0){ //Player is banned
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason + "\n" + plugin.config.BANAPPEND);
+                try {
+                    plugin.altAPI.add(event.getName(), event.getAddress().getHostAddress(), false);
+                } catch (Exception exception){
+                    plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
+                }
                 return;
             }
         } catch (Exception exception){
@@ -35,21 +40,22 @@ public class AnathemaListener implements Listener {
             plugin.getLogger().severe("E01: Failed to access ban api. Message: " + exception.getMessage());
             return;
         }
-        try {
-            plugin.altAPI.add(event.getName(), event.getAddress().getHostAddress());
-        } catch (Exception exception){
-            plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
-        }
+
 
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLoginEvent(PlayerLoginEvent event){
         try {
-
+            //Log successful login
+            try {
+                plugin.altAPI.add(event.getPlayer().getName(), event.getAddress().getHostAddress(), true);
+            } catch (Exception exception){
+                plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
+            }
             List<Note> notes = plugin.banAPI.getLocalNotes(event.getPlayer().getName(), "true");
             if (notes.size() == 0) return;
             for (Note n : notes){
-                String message = String.format("%s[ANATHEMA-NOTES]%s%s has note %s added by %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), event.getPlayer().getName(), n.note, n.issuer);
+                String message = String.format("%s[ANATHEMA-NOTES]%s%s: Issuer: %s Note: %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), event.getPlayer().getName(), n.issuer, n.note);
                 for (Player player : plugin.getServer().getOnlinePlayers()){
                     if (player.hasPermission("junction.anathema.access")){
                         player.sendMessage(message);
