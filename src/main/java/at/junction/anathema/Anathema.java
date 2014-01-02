@@ -84,8 +84,8 @@ public class Anathema extends JavaPlugin{
                 note.append(args[i]);
                 if (i != args.length - 1)
                     note.append(" ");
-
             }
+            addnote(args[0], sender, note.toString());
         }
         else if (command.getName().equals("lookup")){
             if (args.length < 1){
@@ -141,13 +141,13 @@ public class Anathema extends JavaPlugin{
 
      void lookup(String username, CommandSender sender){
         try {
-            sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-BANS]" + ChatColor.RESET + "issuer | reason");
+            sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + "issuer\t|\treason");
             for (Ban b : banAPI.getLocalBans(username, "true")){
-                sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-BANS]" + ChatColor.RESET + b.issuer + " | " + b.reason);
+                sender.sendMessage(ChatColor.GREEN + "[BANS]" + ChatColor.RESET + b.issuer + "\t|\t" + b.reason);
             }
-            sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-NOTES]" + ChatColor.RESET + "issuer | date | note");
+            sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + "issuer\t|\tdate\t|\tnote");
             for (Note n : banAPI.getLocalNotes(username, "true")){
-                sender.sendMessage(ChatColor.GREEN + "[ANATHEMA-NOTES]" + ChatColor.RESET + n.issuer + " | " + n.time + " | " + n.note);
+                sender.sendMessage(ChatColor.GREEN + "[NOTES]" + ChatColor.RESET + n.issuer + "\t|\t" + n.time + "\t|\t" + n.note);
             }
         } catch (Exception e){
             sender.sendMessage("An error has occurred. Lookup failed.");
