@@ -19,6 +19,10 @@ commands:
     description: Add a note to a player's account
     permission: junction.anathema.access
     usage: /addnote <username> <note>
+  lookup:
+    description: Show bans/notes for a player
+    permission: junction.anathema.access
+    usage: /lookup <username>
 permissions:
   junction.anathema.access:
     description: Allows a player to use anathema
