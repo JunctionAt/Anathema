@@ -109,7 +109,12 @@ public class Anathema extends JavaPlugin{
         try {
             banAPI.addBan(username, sender.getName(), reason, config.SERVERNAME);
             staffBroadcast(username + " was banned by " + sender.getName() + ". Reason: " + reason);
-
+            Player p = getServer().getPlayer(username);
+            if (p != null)
+                p.kickPlayer(String.format("%s\n%s", reason, config.BANAPPEND));
+            else
+                sender.sendMessage("Player is not online, not kicked");
+            sender.sendMessage("Player banned");
         } catch (Exception e){
             sender.sendMessage("An error has occurred. Player was not banned. Please contact tech staff.");
             getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
