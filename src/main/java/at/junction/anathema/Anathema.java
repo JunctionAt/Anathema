@@ -148,7 +148,7 @@ public class Anathema extends JavaPlugin{
      void lookup(String username, CommandSender sender){
         try {
             for (Ban b : banAPI.getLocalBans(username, "true")){
-                sender.sendMessage(String.format("%s[NOTE]%s%s: Issuer: %s Reason: %s", ChatColor.GREEN, ChatColor.RESET, username, b.issuer, b.reason));
+                sender.sendMessage(String.format("%s[BAN]%s%s: Issuer: %s Reason: %s", ChatColor.GREEN, ChatColor.RESET, username, b.issuer, b.reason));
             }
             for (Note n : banAPI.getLocalNotes(username, "true")){
                 sender.sendMessage(String.format("%s[NOTE]%s%s: Issuer: %s Note: %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), username, n.issuer, n.note));
