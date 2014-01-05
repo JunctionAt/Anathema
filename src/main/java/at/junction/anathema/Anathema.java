@@ -111,7 +111,7 @@ public class Anathema extends JavaPlugin{
             staffBroadcast(username + " was banned by " + sender.getName() + ". Reason: " + reason);
             Player p = getServer().getPlayer(username);
             if (p != null)
-                p.kickPlayer(String.format("%s\n%s", reason, config.BANAPPEND));
+                p.kickPlayer(String.format("You have been banned. \nrReason: %s\n%s",  reason, config.BANAPPEND));
             else
                 sender.sendMessage("Player is not online, not kicked");
             sender.sendMessage("Player banned");
