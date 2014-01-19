@@ -50,7 +50,7 @@ public class AnathemaListener implements Listener {
             //Log successful login
             try {
                 plugin.altAPI.add(event.getAddress().getHostAddress(), event.getPlayer().getName(), true);
-                System.out.println("Alloewd login event: Updated Alt DB");
+                System.out.println("Allowed login event: Updated Alt DB");
             } catch (Exception exception){
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
             }
