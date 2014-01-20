@@ -7,6 +7,10 @@ website: http://git.junction.at/anathema
 main: at.junction.anathema.Anathema
 
 commands:
+  a:
+    description: Anathema Main Command
+    permission: junction.anathema.access
+    usage: /a
   ban:
     description: Ban Player
     permission: junction.anathema.access
