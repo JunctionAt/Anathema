@@ -152,20 +152,20 @@ public class Anathema extends JavaPlugin {
             List<Note> localNotes = banAPI.getLocalNotes(username, "true");
 
             if (localBans.size() == 0) {
-                sender.sendMessage(String.format("%s[BAN]%s%s has no local bans", ChatColor.GREEN, ChatColor.RED, username));
+                sender.sendMessage(String.format("%s[A]%s%s has no local bans", ChatColor.GREEN, ChatColor.RED, username));
             } else {
-                sender.sendMessage(String.format("%s[BANS]%s", ChatColor.GREEN, ChatColor.RESET));
+                sender.sendMessage(String.format("%s[A][BANS]%s", ChatColor.GREEN, ChatColor.RESET));
                 for (Ban b : localBans) {
-                    sender.sendMessage(String.format("%s[BAN]%sIssuer: %s Reason: %s", ChatColor.GREEN, ChatColor.RESET, b.issuer, b.reason));
+                    sender.sendMessage(String.format("%s[A]%s%s -%s", ChatColor.GREEN, ChatColor.RESET, b.reason, b.issuer));
                 }
             }
 
             if (localNotes.size() == 0) {
                 sender.sendMessage(String.format("%s[NOTE]%s%s has no local notes", ChatColor.GREEN, ChatColor.RESET, username));
             } else {
-                sender.sendMessage(String.format("%s[NOTES]%s", ChatColor.GREEN, ChatColor.RESET));
+                sender.sendMessage(String.format("%s[A][NOTES]%s", ChatColor.GREEN, ChatColor.RESET));
                 for (Note n : localNotes) {
-                    sender.sendMessage(String.format("%s[NOTE]%s Issuer: %s Note: %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), n.issuer, n.note));
+                    sender.sendMessage(String.format("%s[A]%s %s -%s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), n.note, n.issuer));
                 }
             }
         } catch (Exception e) {
