@@ -34,12 +34,10 @@ public class AnathemaListener implements Listener {
                 } catch (Exception exception){
                     plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
                 }
-                return;
             }
         } catch (Exception exception){
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "BanAPI Caused an error. Please contact tech staff");
             plugin.getLogger().severe("E01: Failed to access ban api. Message: " + exception.getMessage());
-            return;
         }
 
 
@@ -56,13 +54,11 @@ public class AnathemaListener implements Listener {
             }
             List<Note> notes = plugin.banAPI.getLocalNotes(event.getPlayer().getName(), "true");
             if (notes.size() == 0) return;
+            plugin.staffBroadcast(String.format("%s[A]%s%s has %s notes", ChatColor.GREEN, ChatColor.RESET,
+                    event.getPlayer().getName(), notes.size()));
             for (Note n : notes){
-                String message = String.format("%s[ANATHEMA-NOTES]%s%s: Issuer: %s Note: %s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), event.getPlayer().getName(), n.issuer, n.note);
-                for (Player player : plugin.getServer().getOnlinePlayers()){
-                    if (player.hasPermission("junction.anathema.access")){
-                        player.sendMessage(message);
-                    }
-                }
+                String message = String.format("%s[A]%s%s -%s", ChatColor.GREEN, ChatColor.RESET, n.note, n.issuer);
+                plugin.staffBroadcast(message);
             }
         } catch (Exception e){
             plugin.getLogger().severe(e.getMessage());
