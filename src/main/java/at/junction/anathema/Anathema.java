@@ -1,6 +1,7 @@
 package at.junction.anathema;
 
 import at.junction.api.alts.AltAPI;
+import at.junction.api.alts.Alt;
 import at.junction.api.bans.BanAPI;
 import at.junction.api.bans.Ban;
 import at.junction.api.bans.Note;
@@ -100,7 +101,7 @@ public class Anathema extends JavaPlugin {
     void staffBroadcast(String message) {
         for (Player p : getServer().getOnlinePlayers()) {
             if (p.hasPermission("anathema.access")) {
-                p.sendMessage(ChatColor.GREEN + "[ANATHEMA]" + message);
+                p.sendMessage(ChatColor.GREEN + "[ANATHEMA] " + ChatColor.WHITE + message);
             }
         }
     }
@@ -113,10 +114,10 @@ public class Anathema extends JavaPlugin {
             if (p != null)
                 p.kickPlayer(String.format("You have been banned. \nrReason: %s\n%s", reason, config.BANAPPEND));
             else
-                sender.sendMessage("Player is not online, not kicked");
-            sender.sendMessage("Player banned");
+                sender.sendMessage(ChatColor.GRAY + "Player is not online, not kicked");
+            sender.sendMessage(ChatColor.GREEN + "Player banned");
         } catch (Exception e) {
-            sender.sendMessage("An error has occurred. Player was not banned. Please contact tech staff.");
+            sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not banned. Please contact tech staff.");
             getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
                     " Message: " + e.getMessage());
         }
@@ -127,7 +128,7 @@ public class Anathema extends JavaPlugin {
             banAPI.delBan(username, sender.getName());
             staffBroadcast(username + " was unbanned by " + sender.getName());
         } catch (Exception e) {
-            sender.sendMessage("An error has occurred. Player was not unbanned. Please contact tech staff.");
+            sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not unbanned. Please contact tech staff.");
             getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
                     " Message: " + e.getMessage());
         }
@@ -138,7 +139,7 @@ public class Anathema extends JavaPlugin {
             banAPI.addNote(username, sender.getName(), note, config.SERVERNAME);
             staffBroadcast(String.format("Note added to %s by %s: %s", sender.getName(), username, note));
         } catch (Exception e) {
-            sender.sendMessage("An error has occurred. Note was not added. Please contact tech staff.");
+            sender.sendMessage(ChatColor.RED + "An error has occurred. Note was not added. Please contact tech staff.");
             getLogger().severe("Error while trying to add note to player. Username: " + username + " Issuer: " + sender.getName() +
                     " Note: " + e.getMessage());
 
@@ -150,26 +151,41 @@ public class Anathema extends JavaPlugin {
         try {
             List<Ban> localBans = banAPI.getLocalBans(username, "true");
             List<Note> localNotes = banAPI.getLocalNotes(username, "true");
+            List<Alt> alts = altAPI.getAlts(username);
 
+            sender.sendMessage(String.format("%s%s---%sLookup for %s%s---", ChatColor.BOLD, ChatColor.DARK_GRAY, ChatColor.GREEN, username, ChatColor.DARK_GRAY));
+
+            sender.sendMessage(String.format("%s%sBans", ChatColor.ITALIC, ChatColor.RED));
             if (localBans.size() == 0) {
-                sender.sendMessage(String.format("%s[A]%s%s has no local bans", ChatColor.GREEN, ChatColor.RED, username));
+                sender.sendMessage(String.format("%s%s has no local bans", ChatColor.GRAY, username));
             } else {
-                sender.sendMessage(String.format("%s[A][BANS]%s", ChatColor.GREEN, ChatColor.RESET));
                 for (Ban b : localBans) {
-                    sender.sendMessage(String.format("%s[A]%s%s -%s", ChatColor.GREEN, ChatColor.RESET, b.reason, b.issuer));
+                    sender.sendMessage(String.format("%s %s-%s", b.reason, ChatColor.DARK_PURPLE, b.issuer));
                 }
             }
 
+            sender.sendMessage(String.format("%s%sNotes", ChatColor.ITALIC, ChatColor.YELLOW));
             if (localNotes.size() == 0) {
-                sender.sendMessage(String.format("%s[NOTE]%s%s has no local notes", ChatColor.GREEN, ChatColor.RESET, username));
+                sender.sendMessage(String.format("%s%s has no local notes", ChatColor.GRAY, username));
             } else {
-                sender.sendMessage(String.format("%s[A][NOTES]%s", ChatColor.GREEN, ChatColor.RESET));
                 for (Note n : localNotes) {
-                    sender.sendMessage(String.format("%s[A]%s %s -%s", ChatColor.GREEN.toString(), ChatColor.RESET.toString(), n.note, n.issuer));
+                    sender.sendMessage(String.format("%s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer));
                 }
             }
+
+            sender.sendMessage(String.format("%s%sAlts", ChatColor.ITALIC, ChatColor.BLUE));
+            if (alts.size() == 0) {
+                sender.sendMessage(String.format("%s%s has no alts", ChatColor.GRAY, username));
+            } else {
+                for (Alt a : alts) {
+                    sender.sendMessage(String.format("%s %sLast login: %s", a.username, ChatColor.GRAY, a.last_login));
+                }
+            }
+
+            sender.sendMessage(String.format("%s%s-----", ChatColor.BOLD, ChatColor.GRAY));
+
         } catch (Exception e) {
-            sender.sendMessage("An error has occurred. Lookup failed.");
+            sender.sendMessage(ChatColor.RED + "An error has occurred. Lookup failed. Please contact tech staff.");
             getLogger().severe("Error while doing lookup. Message: " + e.getMessage());
         }
     }

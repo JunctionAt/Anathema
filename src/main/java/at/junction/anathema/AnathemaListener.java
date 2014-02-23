@@ -54,10 +54,9 @@ public class AnathemaListener implements Listener {
             }
             List<Note> notes = plugin.banAPI.getLocalNotes(event.getPlayer().getName(), "true");
             if (notes.size() == 0) return;
-            plugin.staffBroadcast(String.format("%s[A]%s%s has %s notes", ChatColor.GREEN, ChatColor.RESET,
-                    event.getPlayer().getName(), notes.size()));
+            plugin.staffBroadcast(String.format("%s has %s notes", event.getPlayer().getName(), notes.size()));
             for (Note n : notes){
-                String message = String.format("%s[A]%s%s -%s", ChatColor.GREEN, ChatColor.RESET, n.note, n.issuer);
+                String message = String.format("%s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer);
                 plugin.staffBroadcast(message);
             }
         } catch (Exception e){
