@@ -178,7 +178,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("%s%s has no alts", ChatColor.GRAY, username));
             } else {
                 for (Alt a : alts) {
-                    sender.sendMessage(String.format("%s %sLast login: %s", a.username, ChatColor.GRAY, a.last_login));
+                    sender.sendMessage(String.format("%s %sLast login: %s", a.alt, ChatColor.GRAY, a.last_login));
                 }
             }
 
