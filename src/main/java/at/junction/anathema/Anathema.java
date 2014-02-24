@@ -153,32 +153,32 @@ public class Anathema extends JavaPlugin {
             List<Note> localNotes = banAPI.getLocalNotes(username, "true");
             List<Alt> alts = altAPI.getAlts(username);
 
-            sender.sendMessage(String.format("%s%s---%sLookup for %s%s---", ChatColor.BOLD, ChatColor.DARK_GRAY, ChatColor.GREEN, username, ChatColor.DARK_GRAY));
+            sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
 
             sender.sendMessage(String.format("%s%sBans", ChatColor.ITALIC, ChatColor.RED));
             if (localBans.size() == 0) {
-                sender.sendMessage(String.format("%s%s has no local bans", ChatColor.GRAY, username));
+                sender.sendMessage(String.format("    %s%s has no local bans", ChatColor.GRAY, username));
             } else {
                 for (Ban b : localBans) {
-                    sender.sendMessage(String.format("%s %s-%s", b.reason, ChatColor.DARK_PURPLE, b.issuer));
+                    sender.sendMessage(String.format("    %s %s-%s", b.reason, ChatColor.DARK_PURPLE, b.issuer));
                 }
             }
 
             sender.sendMessage(String.format("%s%sNotes", ChatColor.ITALIC, ChatColor.YELLOW));
             if (localNotes.size() == 0) {
-                sender.sendMessage(String.format("%s%s has no local notes", ChatColor.GRAY, username));
+                sender.sendMessage(String.format("    %s%s has no local notes", ChatColor.GRAY, username));
             } else {
                 for (Note n : localNotes) {
-                    sender.sendMessage(String.format("%s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer));
+                    sender.sendMessage(String.format("    %s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer));
                 }
             }
 
             sender.sendMessage(String.format("%s%sAlts", ChatColor.ITALIC, ChatColor.BLUE));
             if (alts.size() == 0) {
-                sender.sendMessage(String.format("%s%s has no alts", ChatColor.GRAY, username));
+                sender.sendMessage(String.format("    %s%s has no alts", ChatColor.GRAY, username));
             } else {
                 for (Alt a : alts) {
-                    sender.sendMessage(String.format("%s %sLast login: %s", a.alt, ChatColor.GRAY, a.last_login));
+                    sender.sendMessage(String.format("    %s %sLast login: %s", a.alt, ChatColor.GRAY, a.last_login));
                 }
             }
 
