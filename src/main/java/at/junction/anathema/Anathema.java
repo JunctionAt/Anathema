@@ -160,7 +160,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("    %s%s has no local bans", ChatColor.GRAY, username));
             } else {
                 for (Ban b : localBans) {
-                    sender.sendMessage(String.format("    %s %s-%s", b.reason, ChatColor.DARK_PURPLE, b.issuer));
+                    sender.sendMessage(String.format("    %s %s %s-%s", b.id, b.reason, ChatColor.DARK_PURPLE, b.issuer));
                 }
             }
 
@@ -169,7 +169,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("    %s%s has no local notes", ChatColor.GRAY, username));
             } else {
                 for (Note n : localNotes) {
-                    sender.sendMessage(String.format("    %s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer));
+                    sender.sendMessage(String.format("    %s %s %s-%s", n.id, n.note, ChatColor.DARK_PURPLE, n.issuer));
                 }
             }
 
