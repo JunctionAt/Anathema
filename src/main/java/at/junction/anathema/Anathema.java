@@ -16,6 +16,7 @@ import at.junction.api.fields.PlayerIdentifier;
 
 
 import java.io.File;
+import java.util.logging.Level;
 
 import scala.collection.Iterator;
 import scala.collection.immutable.List;
@@ -138,8 +139,7 @@ public class Anathema extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Player banned");
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not banned. Please contact tech staff.");
-            getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
-                    " Message: " + e.getMessage());
+            getLogger().log(Level.SERVERE, "Error while trying to ban player. Username: " + username + " Issuer: ", e);
         }
     }
 
@@ -151,8 +151,7 @@ public class Anathema extends JavaPlugin {
             staffBroadcast(username, " was unbanned by ", sender.getName());
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not unbanned. Please contact tech staff.");
-            getLogger().severe("Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName() +
-                    " Message: " + e.getMessage());
+            getLogger().log(Level.SERVERE, "Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName(), e);
         }
     }
 
@@ -164,8 +163,7 @@ public class Anathema extends JavaPlugin {
             staffBroadcast("Note added to", sender.getName(), " by ", username, ": ", note);
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Note was not added. Please contact tech staff.");
-            getLogger().severe("Error while trying to add note to player. Username: " + username + " Issuer: " + sender.getName() +
-                    " Note: " + e.getMessage());
+            getLogger().log(Level.SERVERE, "Error while trying to add note to player. Username: " + username + " Issuer: ", e);
 
         }
 
@@ -217,7 +215,7 @@ public class Anathema extends JavaPlugin {
 
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Lookup failed. Please contact tech staff.");
-            getLogger().severe("Error while doing lookup. Message: " + e.getMessage());
+            getLogger().log(Level.SERVERE, "Error while doing lookup. ", e);
         }
     }
 
