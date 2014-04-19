@@ -1,7 +1,11 @@
 package at.junction.anathema;
 
-import at.junction.api.bans.Ban;
-import at.junction.api.bans.Note;
+import at.junction.api.fields.PlayerIdentifier;
+import at.junction.api.rest.BansApi.Ban;
+import at.junction.api.rest.BansApi.Note;
+import at.junction.api.rest.AltApi.Alt;
+
+
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,11 +29,12 @@ public class AnathemaListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
         try {
+            PlayerIdentifier target = new PlayerIdentifier(plugin.getServer().getPlayer(event.getName()).getUniqueId(), event.getName());
             List<Ban> bans = plugin.banAPI.getLocalBans(event.getName(), "true");
             if (bans.size() > 0){ //Player is banned
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason + "\n" + plugin.config.BANAPPEND);
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason() + "\n" + plugin.config.BANAPPEND);
                 try {
-                    plugin.altAPI.add(event.getAddress().getHostAddress(), event.getName(), false);
+                    plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, false);
                     System.out.println("Disallowed login event: Updated alt DB");
                 } catch (Exception exception){
                     plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
@@ -47,7 +52,8 @@ public class AnathemaListener implements Listener {
         try {
             //Log successful login
             try {
-                plugin.altAPI.add(event.getAddress().getHostAddress(), event.getPlayer().getName(), true);
+                PlayerIdentifier target = new PlayerIdentifier(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+                plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, true);
                 System.out.println("Allowed login event: Updated Alt DB");
             } catch (Exception exception){
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
@@ -56,7 +62,7 @@ public class AnathemaListener implements Listener {
             if (notes.size() == 0) return;
             plugin.staffBroadcast(String.format("%s has %s notes", event.getPlayer().getName(), notes.size()));
             for (Note n : notes){
-                String message = String.format("%s %s-%s", n.note, ChatColor.DARK_PURPLE, n.issuer);
+                String message = String.format("%s %s-%s", n.note(), ChatColor.DARK_PURPLE, n.issuer());
                 plugin.staffBroadcast(message);
             }
         } catch (Exception e){
