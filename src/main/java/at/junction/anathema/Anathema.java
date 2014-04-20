@@ -138,6 +138,7 @@ public class Anathema extends JavaPlugin {
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not banned. Please contact tech staff.");
             getLogger().log(Level.SEVERE, "Error while trying to ban player. Username: " + username + " Issuer: ", e);
+            e.printStackTrace();
         }
     }
 
@@ -150,6 +151,7 @@ public class Anathema extends JavaPlugin {
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not unbanned. Please contact tech staff.");
             getLogger().log(Level.SEVERE, "Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName(), e);
+            e.printStackTrace();
         }
     }
 
@@ -162,6 +164,7 @@ public class Anathema extends JavaPlugin {
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Note was not added. Please contact tech staff.");
             getLogger().log(Level.SEVERE, "Error while trying to add note to player. Username: " + username + " Issuer: ", e);
+            e.printStackTrace();
 
         }
 
@@ -208,6 +211,7 @@ public class Anathema extends JavaPlugin {
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Lookup failed. Please contact tech staff.");
             getLogger().log(Level.SEVERE, "Error while doing lookup. ", e);
+            e.printStackTrace();
         }
     }
 

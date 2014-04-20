@@ -43,6 +43,7 @@ public class AnathemaListener implements Listener {
         } catch (Exception exception){
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "BanAPI Caused an error. Please contact tech staff");
             plugin.getLogger().severe("E01: Failed to access ban api. Message: " + exception.getMessage());
+            exception.printStackTrace();
         }
 
 
@@ -67,6 +68,7 @@ public class AnathemaListener implements Listener {
             }
         } catch (Exception e){
             plugin.getLogger().severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 }
