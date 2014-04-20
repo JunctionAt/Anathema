@@ -42,6 +42,7 @@
                     <artifactSet>
                         <excludes>
                             <exclude>org.bukkit:bukkit</exclude>
+                            <exclude>at.junction:junction-api_2.10</exclude>
                         </excludes>
                     </artifactSet>
                     <filters>
