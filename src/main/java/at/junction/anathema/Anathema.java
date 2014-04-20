@@ -29,8 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Anathema extends JavaPlugin {
 
     RestApi restAPI;
-    BansApi banAPI;
-    AltApi altAPI;
     Configuration config;
 
 
@@ -46,8 +44,6 @@ public class Anathema extends JavaPlugin {
         config.load();
 
         restAPI = new RestApi(config.ENDPOINT, config.APIKEY, config.SERVERNAME);
-        banAPI = new BansApi(restAPI);
-        altAPI = new AltApi(restAPI);
 
         getServer().getPluginManager().registerEvents(new AnathemaListener(this), this);
         getLogger().info("Enabled Anathema");
@@ -127,7 +123,7 @@ public class Anathema extends JavaPlugin {
         try {
             PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
             PlayerIdentifier issuer = new PlayerIdentifier(((Player) sender).getUniqueId(), sender.getName());
-            banAPI.addBan(target, issuer, reason);
+            restAPI.bans().addBan(target, issuer, reason);
             staffBroadcast(username, " was banned by ", sender.getName(), ". Reason: ", reason);
             Player p = getServer().getPlayer(target.uuid());
             if (p != null)
@@ -146,7 +142,7 @@ public class Anathema extends JavaPlugin {
         try {
             PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
             PlayerIdentifier issuer = new PlayerIdentifier(sender.getUniqueId(), sender.getName());
-            banAPI.delBan(target, issuer);
+            restAPI.bans().delBan(target, issuer);
             staffBroadcast(username, " was unbanned by ", sender.getName());
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not unbanned. Please contact tech staff.");
@@ -159,7 +155,7 @@ public class Anathema extends JavaPlugin {
         try {
             PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
             PlayerIdentifier issuer = new PlayerIdentifier(sender.getUniqueId(), sender.getName());
-            banAPI.addNote(target, issuer, note);
+            restAPI.bans().addNote(target, issuer, note);
             staffBroadcast("Note added to", sender.getName(), " by ", username, ": ", note);
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Note was not added. Please contact tech staff.");
@@ -173,9 +169,9 @@ public class Anathema extends JavaPlugin {
     void lookup(String username, CommandSender sender) {
         try {
             PlayerIdentifier target = PlayerIdentifier.apply(getServer().getPlayer(username));
-            List<Ban> localBans = banAPI.getBans(target, BanStatus.Active);
-            List<Note> localNotes = banAPI.getNotes(target, BanStatus.Active);
-            List<Alt> alts = altAPI.getAlts(target);
+            List<Ban> localBans = restAPI.bans().getBans(target, BanStatus.Active);
+            List<Note> localNotes = restAPI.bans().getNotes(target, BanStatus.Active);
+            List<Alt> alts = restAPI.alts().getAlts(target);
 
             sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
 

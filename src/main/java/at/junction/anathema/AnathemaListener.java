@@ -36,11 +36,11 @@ public class AnathemaListener implements Listener {
         try {
 
             PlayerIdentifier target = new PlayerIdentifier(p.getUniqueId(), p.getName());
-            List<Ban> bans = plugin.banAPI.getBans(new PlayerIdentifier(p.getUniqueId(), p.getName()), BanStatus.Active);
+            List<Ban> bans = plugin.restAPI.bans().getBans(new PlayerIdentifier(p.getUniqueId(), p.getName()), BanStatus.Active);
             if (bans.size() > 0) { //Player is banned
                 event.disallow(PlayerLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason() + "\n" + plugin.config.BANAPPEND);
                 try {
-                    plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, false);
+                    plugin.restAPI.alts().ensurePlayerData(event.getAddress().getHostAddress(), target, false);
                     System.out.println("Disallowed login event: Updated alt DB");
                 } catch (Exception exception) {
                     plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
@@ -59,12 +59,12 @@ public class AnathemaListener implements Listener {
         try {
             try {
                 PlayerIdentifier target = new PlayerIdentifier(event.getPlayer().getUniqueId(), event.getPlayer().getName());
-                plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, true);
+                plugin.restAPI.alts().ensurePlayerData(event.getAddress().getHostAddress(), target, true);
                 System.out.println("Allowed login event: Updated Alt DB");
             } catch (Exception exception) {
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
             }
-            List<Note> notes = plugin.banAPI.getNotes(PlayerIdentifier.apply(event.getPlayer()), BanStatus.Active);
+            List<Note> notes = plugin.restAPI.bans().getNotes(PlayerIdentifier.apply(event.getPlayer()), BanStatus.Active);
             if (notes.size() == 0) return;
             plugin.staffBroadcast(String.format("%s has %s notes", event.getPlayer().getName(), notes.size()));
             for (Note n : notes) {
