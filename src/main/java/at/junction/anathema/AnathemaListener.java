@@ -24,49 +24,54 @@ public class AnathemaListener implements Listener {
 
     public AnathemaListener(Anathema plugin) {
         this.plugin = plugin;
-   }
-    
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
+    public void onPlayerLoginEvent(PlayerLoginEvent event) {
+        Player p = event.getPlayer();
+        /*
+         * Check to see if the player is banned
+         * if they are, disallow event.
+         */
         try {
-            PlayerIdentifier target = new PlayerIdentifier(plugin.getServer().getPlayer(event.getName()).getUniqueId(), event.getName());
-            List<Ban> bans = plugin.banAPI.getBans(new PlayerIdentifier(event.getUniqueId(), event.getName()), BanStatus.Active);
-            if (bans.size() > 0){ //Player is banned
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason() + "\n" + plugin.config.BANAPPEND);
+
+            PlayerIdentifier target = new PlayerIdentifier(p.getUniqueId(), p.getName());
+            List<Ban> bans = plugin.banAPI.getBans(new PlayerIdentifier(p.getUniqueId(), p.getName()), BanStatus.Active);
+            if (bans.size() > 0) { //Player is banned
+                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason() + "\n" + plugin.config.BANAPPEND);
                 try {
                     plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, false);
                     System.out.println("Disallowed login event: Updated alt DB");
-                } catch (Exception exception){
+                } catch (Exception exception) {
                     plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
                 }
             }
-        } catch (Exception exception){
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "BanAPI Caused an error. Please contact tech staff");
+        } catch (Exception exception) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "BanAPI Caused an error. Please contact tech staff");
             plugin.getLogger().severe("E01: Failed to access ban api. Message: " + exception.getMessage());
             exception.printStackTrace();
         }
-
-
-    }
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLoginEvent(PlayerLoginEvent event){
+        /*
+         * Alts!
+         * Log the login attempt
+         *
+         */
         try {
-            //Log successful login
             try {
                 PlayerIdentifier target = new PlayerIdentifier(event.getPlayer().getUniqueId(), event.getPlayer().getName());
                 plugin.altAPI.ensurePlayerData(event.getAddress().getHostAddress(), target, true);
                 System.out.println("Allowed login event: Updated Alt DB");
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
             }
             List<Note> notes = plugin.banAPI.getNotes(PlayerIdentifier.apply(event.getPlayer()), BanStatus.Active);
             if (notes.size() == 0) return;
             plugin.staffBroadcast(String.format("%s has %s notes", event.getPlayer().getName(), notes.size()));
-            for (Note n : notes){
+            for (Note n : notes) {
                 String message = String.format("%s %s-%s", n.note(), ChatColor.DARK_PURPLE, n.issuer());
                 plugin.staffBroadcast(message);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             plugin.getLogger().severe(e.getMessage());
             e.printStackTrace();
         }
