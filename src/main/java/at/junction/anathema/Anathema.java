@@ -2,6 +2,7 @@ package at.junction.anathema;
 
 //Import APIs
 
+import at.junction.api.BanStatus;
 import at.junction.api.rest.RestApi;
 import at.junction.api.rest.AltApi;
 import at.junction.api.rest.BansApi;
@@ -10,16 +11,13 @@ import at.junction.api.rest.AltApi.Alt;
 import at.junction.api.rest.BansApi.Ban;
 import at.junction.api.rest.BansApi.Note;
 
-import at.junction.api.rest.BansApi.BanStatus$;
-
 import at.junction.api.fields.PlayerIdentifier;
 
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
-
-import scala.collection.Iterator;
-import scala.collection.immutable.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -139,7 +137,7 @@ public class Anathema extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Player banned");
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not banned. Please contact tech staff.");
-            getLogger().log(Level.SERVERE, "Error while trying to ban player. Username: " + username + " Issuer: ", e);
+            getLogger().log(Level.SEVERE, "Error while trying to ban player. Username: " + username + " Issuer: ", e);
         }
     }
 
@@ -151,7 +149,7 @@ public class Anathema extends JavaPlugin {
             staffBroadcast(username, " was unbanned by ", sender.getName());
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Player was not unbanned. Please contact tech staff.");
-            getLogger().log(Level.SERVERE, "Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName(), e);
+            getLogger().log(Level.SEVERE, "Error while trying to ban player. Username: " + username + " Issuer: " + sender.getName(), e);
         }
     }
 
@@ -163,7 +161,7 @@ public class Anathema extends JavaPlugin {
             staffBroadcast("Note added to", sender.getName(), " by ", username, ": ", note);
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Note was not added. Please contact tech staff.");
-            getLogger().log(Level.SERVERE, "Error while trying to add note to player. Username: " + username + " Issuer: ", e);
+            getLogger().log(Level.SEVERE, "Error while trying to add note to player. Username: " + username + " Issuer: ", e);
 
         }
 
@@ -171,9 +169,9 @@ public class Anathema extends JavaPlugin {
 
     void lookup(String username, CommandSender sender) {
         try {
-            PlayerIdentifier target = new PlayerIdentifier(getServer().getPlayer(username).getUniqueId(), username);
-            List<Ban> localBans = banAPI.getLocalBans(username, "true");
-            List<Note> localNotes = banAPI.getLocalNotes(username, "true");
+            PlayerIdentifier target = PlayerIdentifier.apply(getServer().getPlayer(username));
+            List<Ban> localBans = banAPI.getBans(target, BanStatus.Active);
+            List<Note> localNotes = banAPI.getNotes(target, BanStatus.Active);
             List<Alt> alts = altAPI.getAlts(target);
 
             sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
@@ -182,9 +180,7 @@ public class Anathema extends JavaPlugin {
             if (localBans.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no local bans", ChatColor.GRAY, username));
             } else {
-                Iterator it = localBans.iterator();
-                while (it.hasNext()) {
-                    Ban b = (Ban) it.next();
+                for (Ban b : localBans) {
                     sender.sendMessage(String.format("    %s %s %s-%s", b.id(), b.reason(), ChatColor.DARK_PURPLE, b.issuer().name()));
                 }
             }
@@ -193,9 +189,7 @@ public class Anathema extends JavaPlugin {
             if (localNotes.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no local notes", ChatColor.GRAY, username));
             } else {
-                Iterator it = localNotes.iterator();
-                while (it.hasNext()){
-                    Note n = (Note)it.next();
+                for (Note n : localNotes) {
                     sender.sendMessage(String.format("    %s %s %s-%s", n.id(), n.note(), ChatColor.DARK_PURPLE, n.issuer().name()));
                 }
             }
@@ -204,9 +198,7 @@ public class Anathema extends JavaPlugin {
             if (alts.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no alts", ChatColor.GRAY, username));
             } else {
-                Iterator it = alts.iterator();
-                while (it.hasNext()){
-                    Alt a = (Alt)it.next();
+                for (Alt a : alts) {
                     sender.sendMessage(String.format("    %s %sLast login: %s", a.alt(), ChatColor.GRAY, a.last_login()));
                 }
             }
@@ -215,7 +207,7 @@ public class Anathema extends JavaPlugin {
 
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "An error has occurred. Lookup failed. Please contact tech staff.");
-            getLogger().log(Level.SERVERE, "Error while doing lookup. ", e);
+            getLogger().log(Level.SEVERE, "Error while doing lookup. ", e);
         }
     }
 

@@ -1,11 +1,11 @@
 package at.junction.anathema;
 
+import at.junction.api.BanStatus;
 import at.junction.api.fields.PlayerIdentifier;
+import at.junction.api.rest.BansApi;
 import at.junction.api.rest.BansApi.Ban;
 import at.junction.api.rest.BansApi.Note;
 import at.junction.api.rest.AltApi.Alt;
-
-
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ public class AnathemaListener implements Listener {
     public void onAsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
         try {
             PlayerIdentifier target = new PlayerIdentifier(plugin.getServer().getPlayer(event.getName()).getUniqueId(), event.getName());
-            List<Ban> bans = plugin.banAPI.getLocalBans(event.getName(), "true");
+            List<Ban> bans = plugin.banAPI.getBans(new PlayerIdentifier(event.getUniqueId(), event.getName()), BanStatus.Active);
             if (bans.size() > 0){ //Player is banned
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, "You have been banned from this server.\nReason: " + bans.get(0).reason() + "\n" + plugin.config.BANAPPEND);
                 try {
@@ -58,7 +58,7 @@ public class AnathemaListener implements Listener {
             } catch (Exception exception){
                 plugin.getLogger().severe("E02: Failed to log alt information. Message: " + exception.getMessage());
             }
-            List<Note> notes = plugin.banAPI.getLocalNotes(event.getPlayer().getName(), "true");
+            List<Note> notes = plugin.banAPI.getNotes(PlayerIdentifier.apply(event.getPlayer()), BanStatus.Active);
             if (notes.size() == 0) return;
             plugin.staffBroadcast(String.format("%s has %s notes", event.getPlayer().getName(), notes.size()));
             for (Note n : notes){
