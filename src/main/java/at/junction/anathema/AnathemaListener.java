@@ -2,17 +2,14 @@ package at.junction.anathema;
 
 import at.junction.api.BanStatus;
 import at.junction.api.fields.PlayerIdentifier;
-import at.junction.api.rest.BansApi;
 import at.junction.api.rest.BansApi.Ban;
 import at.junction.api.rest.BansApi.Note;
-import at.junction.api.rest.AltApi.Alt;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 
