@@ -13,7 +13,6 @@ import at.junction.api.fields.PlayerIdentifier;
 
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -165,15 +164,13 @@ public class Anathema extends JavaPlugin {
     }
 
     void lookup(String username, CommandSender sender) {
+        PlayerIdentifier target = PlayerIdentifier.apply(getServer().getPlayer(username));
+
+        sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
+        sender.sendMessage(String.format("%s%sBans", ChatColor.ITALIC, ChatColor.RED));
+
         try {
-            PlayerIdentifier target = PlayerIdentifier.apply(getServer().getPlayer(username));
             List<Ban> localBans = restAPI.bans().getBans(target, BanStatus.Active);
-            List<Note> localNotes = restAPI.bans().getNotes(target, BanStatus.Active);
-            List<Alt> alts = restAPI.alts().getAlts(target);
-
-            sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
-
-            sender.sendMessage(String.format("%s%sBans", ChatColor.ITALIC, ChatColor.RED));
             if (localBans.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no local bans", ChatColor.GRAY, username));
             } else {
@@ -181,8 +178,14 @@ public class Anathema extends JavaPlugin {
                     sender.sendMessage(String.format("    %s %s %s-%s", b.id(), b.reason(), ChatColor.DARK_PURPLE, b.issuer().name()));
                 }
             }
+        } catch (Exception e) {
+            sender.sendMessage(String.format("%sError occured while looking up bans", ChatColor.RED));
+        }
 
-            sender.sendMessage(String.format("%s%sNotes", ChatColor.ITALIC, ChatColor.YELLOW));
+        sender.sendMessage(String.format("%s%sNotes", ChatColor.ITALIC, ChatColor.YELLOW));
+        try {
+            List<Note> localNotes = restAPI.bans().getNotes(target, BanStatus.Active);
+
             if (localNotes.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no local notes", ChatColor.GRAY, username));
             } else {
@@ -190,7 +193,14 @@ public class Anathema extends JavaPlugin {
                     sender.sendMessage(String.format("    %s %s %s-%s", n.id(), n.note(), ChatColor.DARK_PURPLE, n.issuer().name()));
                 }
             }
+        } catch (Exception e) {
+            sender.sendMessage(String.format("%sError occured while looking up notes", ChatColor.RED));
+            e.printStackTrace();
 
+        }
+
+        try {
+            List<Alt> alts = restAPI.alts().getAlts(target);
             sender.sendMessage(String.format("%s%sAlts", ChatColor.ITALIC, ChatColor.BLUE));
             if (alts.size() == 0) {
                 sender.sendMessage(String.format("    %s%s has no alts", ChatColor.GRAY, username));
@@ -201,12 +211,11 @@ public class Anathema extends JavaPlugin {
             }
 
             sender.sendMessage(String.format("%s%s-----", ChatColor.BOLD, ChatColor.GRAY));
-
         } catch (Exception e) {
-            sender.sendMessage(ChatColor.RED + "An error has occurred. Lookup failed. Please contact tech staff.");
-            getLogger().log(Level.SEVERE, "Error while doing lookup. ", e);
+            sender.sendMessage(String.format("%sError occured while looking up alts", ChatColor.RED));
             e.printStackTrace();
         }
+
     }
 
     String join(Character c, String... str) {
