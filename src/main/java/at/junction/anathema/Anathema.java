@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -118,8 +119,8 @@ public class Anathema extends JavaPlugin {
 
     void ban(String username, Player sender, String reason) {
         try {
-            PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
-            PlayerIdentifier issuer = new PlayerIdentifier(((Player) sender).getUniqueId(), sender.getName());
+            PlayerIdentifier target = restAPI.players().getPlayerByName(username);
+            PlayerIdentifier issuer = PlayerIdentifier.apply(sender);
             restAPI.bans().addBan(target, issuer, reason);
             staffBroadcast(username, " was banned by ", sender.getName(), ". Reason: ", reason);
             Player p = getServer().getPlayer(target.uuid());
@@ -137,8 +138,8 @@ public class Anathema extends JavaPlugin {
 
     void unban(String username, Player sender) {
         try {
-            PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
-            PlayerIdentifier issuer = new PlayerIdentifier(sender.getUniqueId(), sender.getName());
+            PlayerIdentifier target = restAPI.players().getPlayerByName(username);
+            PlayerIdentifier issuer = PlayerIdentifier.apply(sender);
             restAPI.bans().delBan(target, issuer);
             staffBroadcast(username, " was unbanned by ", sender.getName());
         } catch (Exception e) {
@@ -150,8 +151,8 @@ public class Anathema extends JavaPlugin {
 
     void addnote(String username, Player sender, String note) {
         try {
-            PlayerIdentifier target = new PlayerIdentifier(getServer().getOfflinePlayer(username).getUniqueId(), username);
-            PlayerIdentifier issuer = new PlayerIdentifier(sender.getUniqueId(), sender.getName());
+            PlayerIdentifier target = restAPI.players().getPlayerByName(username);
+            PlayerIdentifier issuer = PlayerIdentifier.apply(sender);
             restAPI.bans().addNote(target, issuer, note);
             staffBroadcast("Note added to", sender.getName(), " by ", username, ": ", note);
         } catch (Exception e) {
@@ -164,7 +165,7 @@ public class Anathema extends JavaPlugin {
     }
 
     void lookup(String username, CommandSender sender) {
-        PlayerIdentifier target = PlayerIdentifier.apply(getServer().getPlayer(username));
+        PlayerIdentifier target = restAPI.players().getPlayerByName(username);
 
         sender.sendMessage(String.format("%s%s---%s%sLookup for %s%s%s---", ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY, ChatColor.RESET, ChatColor.GREEN, username, ChatColor.STRIKETHROUGH, ChatColor.DARK_GRAY));
         sender.sendMessage(String.format("%s%sBans", ChatColor.ITALIC, ChatColor.RED));
