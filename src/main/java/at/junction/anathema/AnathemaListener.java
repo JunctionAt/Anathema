@@ -2,8 +2,8 @@ package at.junction.anathema;
 
 import at.junction.api.BanStatus;
 import at.junction.api.fields.PlayerIdentifier;
-import at.junction.api.rest.BansApi.Ban;
-import at.junction.api.rest.BansApi.Note;
+import at.junction.api.rest.Ban;
+import at.junction.api.rest.Note;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
