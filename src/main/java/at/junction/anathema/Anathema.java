@@ -6,8 +6,8 @@ import at.junction.api.BanStatus;
 import at.junction.api.rest.RestApi;
 //Import Objects
 import at.junction.api.rest.AltApi.Alt;
-import at.junction.api.rest.BansApi.Ban;
-import at.junction.api.rest.BansApi.Note;
+import at.junction.api.rest.Ban;
+import at.junction.api.rest.Note;
 
 import at.junction.api.fields.PlayerIdentifier;
 
@@ -176,7 +176,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("    %s%s has no local bans", ChatColor.GRAY, username));
             } else {
                 for (Ban b : localBans) {
-                    sender.sendMessage(String.format("    %s %s %s-%s", b.id(), b.reason(), ChatColor.DARK_PURPLE, b.issuer().name()));
+                    sender.sendMessage(String.format("    %s %s %s-%s", b.id(), b.reason(), ChatColor.DARK_PURPLE, b.issuer()));
                 }
             }
         } catch (Exception e) {
@@ -191,7 +191,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("    %s%s has no local notes", ChatColor.GRAY, username));
             } else {
                 for (Note n : localNotes) {
-                    sender.sendMessage(String.format("    %s %s %s-%s", n.id(), n.note(), ChatColor.DARK_PURPLE, n.issuer().name()));
+                    sender.sendMessage(String.format("    %s %s %s-%s", n.id(), n.note(), ChatColor.DARK_PURPLE, n.issuer()));
                 }
             }
         } catch (Exception e) {
