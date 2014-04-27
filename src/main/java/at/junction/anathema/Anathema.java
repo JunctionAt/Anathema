@@ -5,7 +5,7 @@ package at.junction.anathema;
 import at.junction.api.BanStatus;
 import at.junction.api.rest.RestApi;
 //Import Objects
-import at.junction.api.rest.AltApi.Alt;
+import at.junction.api.rest.Alt;
 import at.junction.api.rest.Ban;
 import at.junction.api.rest.Note;
 
