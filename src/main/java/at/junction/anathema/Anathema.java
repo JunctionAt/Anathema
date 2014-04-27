@@ -11,13 +11,11 @@ import at.junction.api.rest.Note;
 
 import at.junction.api.fields.PlayerIdentifier;
 
-
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -207,7 +205,7 @@ public class Anathema extends JavaPlugin {
                 sender.sendMessage(String.format("    %s%s has no alts", ChatColor.GRAY, username));
             } else {
                 for (Alt a : alts) {
-                    sender.sendMessage(String.format("    %s %sLast login: %s", a.alt(), ChatColor.GRAY, a.last_login()));
+                    sender.sendMessage(String.format("    %s %sLast login: %s", a.player().name(), ChatColor.GRAY, a.last_login()));
                 }
             }
 
