@@ -109,8 +109,8 @@ public class Anathema extends JavaPlugin {
 
     void staffBroadcast(String... message) {
         for (Player p : getServer().getOnlinePlayers()) {
-            if (p.hasPermission("anathema.access")) {
-                p.sendMessage(String.format("%s[ANATHEMA %s%s", ChatColor.GREEN, ChatColor.WHITE, join(null, message)));
+            if (p.hasPermission("junction.anathema.access")) {
+                p.sendMessage(String.format("%s[ANATHEMA] %s%s", ChatColor.GREEN, ChatColor.WHITE, join(null, message)));
             }
         }
     }
