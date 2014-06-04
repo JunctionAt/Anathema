@@ -27,6 +27,15 @@ public class AnathemaListener implements Listener {
     public void onPlayerLoginEvent(PlayerLoginEvent event) {
         Player p = event.getPlayer();
         PlayerIdentifier target = PlayerIdentifier.apply(p);
+
+        //If player has a space in their name, disallow the event
+        //Yay for fixing mojang's bugs!
+
+        if (p.getName().indexOf(' ') != -1){
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Sorry, your name has an invalid token (a space). Please try with another account");
+            plugin.getLogger().info(String.format("Player \"%s\" could not log in: space found in name", p.getName()));
+        }
+
         /*
          * Check to see if the player is banned
          * if they are, disallow event.
